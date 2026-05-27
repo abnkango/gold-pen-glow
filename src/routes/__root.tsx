@@ -63,6 +63,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "منصتك التعليمية الأولى في سوريا" },
       { property: "og:title", content: "ورقة وقلم" },
       { property: "og:description", content: "منصتك التعليمية الأولى في سوريا" },
+      { name: "twitter:title", content: "ورقة وقلم" },
+      { name: "twitter:description", content: "منصتك التعليمية الأولى في سوريا" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f94a2258-4a01-4db6-a1cc-0927574570ce" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f94a2258-4a01-4db6-a1cc-0927574570ce" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
