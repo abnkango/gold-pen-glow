@@ -9,7 +9,13 @@ export const Route = createFileRoute("/app/settings")({
   component: SettingsScreen,
 });
 
-const SECTIONS = [
+type Row = {
+  icon: typeof User;
+  label: string;
+  desc: string;
+  action?: "toggle";
+};
+const SECTIONS: { title: string; rows: Row[] }[] = [
   {
     title: "الحساب",
     rows: [
@@ -20,7 +26,7 @@ const SECTIONS = [
   {
     title: "المواد الدراسية",
     rows: [
-      { icon: BookOpen, label: "المواد غير الملزمة", desc: "إدارة المواد الاختيارية", action: "toggle" as const },
+      { icon: BookOpen, label: "المواد غير الملزمة", desc: "إدارة المواد الاختيارية", action: "toggle" },
     ],
   },
   {
