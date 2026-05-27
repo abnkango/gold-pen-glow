@@ -1,29 +1,54 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { motion } from "framer-motion";
+import { Logo } from "@/components/Logo";
+import { GoldButton } from "@/components/GoldButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "ورقة وقلم — منصتك التعليمية" },
+      { name: "description", content: "منصة تعليمية فاخرة للطلاب في سوريا" },
     ],
   }),
-  component: Index,
+  component: Splash,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Splash() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <ScreenTransition>
+      <div className="relative min-h-screen flex flex-col items-center justify-between px-6 py-14 overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+
+        <div className="flex-1" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 24, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center text-center"
+        >
+          <Logo size={120} />
+          <h1 className="mt-8 font-display text-5xl text-gold leading-none">ورقة وقلم</h1>
+          <p className="mt-4 text-silver-dim text-base">منصتك التعليمية الأولى في سوريا</p>
+        </motion.div>
+
+        <div className="flex-1" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.7 }}
+          className="w-full max-w-sm space-y-3"
+        >
+          <Link to="/auth" search={{ mode: "register" } as never}>
+            <GoldButton variant="primary">إنشاء حساب</GoldButton>
+          </Link>
+          <Link to="/auth" search={{ mode: "login" } as never}>
+            <GoldButton variant="outline">تسجيل الدخول</GoldButton>
+          </Link>
+        </motion.div>
+      </div>
+    </ScreenTransition>
   );
 }

@@ -9,38 +9,231 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as BranchesRouteImport } from './routes/branches'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppLibraryRouteImport } from './routes/app.library'
+import { Route as AppHomeRouteImport } from './routes/app.home'
+import { Route as AppTeachersIndexRouteImport } from './routes/app.teachers.index'
+import { Route as AppSubjectsIndexRouteImport } from './routes/app.subjects.index'
+import { Route as AppTeachersIdRouteImport } from './routes/app.teachers.$id'
+import { Route as AppSubjectsIdRouteImport } from './routes/app.subjects.$id'
+import { Route as AppSubjectsIdUnitIdQuizRouteImport } from './routes/app.subjects.$id.$unitId.quiz'
+import { Route as AppSubjectsIdUnitIdLessonsRouteImport } from './routes/app.subjects.$id.$unitId.lessons'
 
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchesRoute = BranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHomeRoute = AppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTeachersIndexRoute = AppTeachersIndexRouteImport.update({
+  id: '/teachers/',
+  path: '/teachers/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubjectsIndexRoute = AppSubjectsIndexRouteImport.update({
+  id: '/subjects/',
+  path: '/subjects/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTeachersIdRoute = AppTeachersIdRouteImport.update({
+  id: '/teachers/$id',
+  path: '/teachers/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubjectsIdRoute = AppSubjectsIdRouteImport.update({
+  id: '/subjects/$id',
+  path: '/subjects/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubjectsIdUnitIdQuizRoute = AppSubjectsIdUnitIdQuizRouteImport.update({
+  id: '/$unitId/quiz',
+  path: '/$unitId/quiz',
+  getParentRoute: () => AppSubjectsIdRoute,
+} as any)
+const AppSubjectsIdUnitIdLessonsRoute =
+  AppSubjectsIdUnitIdLessonsRouteImport.update({
+    id: '/$unitId/lessons',
+    path: '/$unitId/lessons',
+    getParentRoute: () => AppSubjectsIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/branches': typeof BranchesRoute
+  '/verify': typeof VerifyRoute
+  '/app/home': typeof AppHomeRoute
+  '/app/library': typeof AppLibraryRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
+  '/app/teachers/$id': typeof AppTeachersIdRoute
+  '/app/subjects/': typeof AppSubjectsIndexRoute
+  '/app/teachers/': typeof AppTeachersIndexRoute
+  '/app/subjects/$id/$unitId/lessons': typeof AppSubjectsIdUnitIdLessonsRoute
+  '/app/subjects/$id/$unitId/quiz': typeof AppSubjectsIdUnitIdQuizRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/branches': typeof BranchesRoute
+  '/verify': typeof VerifyRoute
+  '/app/home': typeof AppHomeRoute
+  '/app/library': typeof AppLibraryRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
+  '/app/teachers/$id': typeof AppTeachersIdRoute
+  '/app/subjects': typeof AppSubjectsIndexRoute
+  '/app/teachers': typeof AppTeachersIndexRoute
+  '/app/subjects/$id/$unitId/lessons': typeof AppSubjectsIdUnitIdLessonsRoute
+  '/app/subjects/$id/$unitId/quiz': typeof AppSubjectsIdUnitIdQuizRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/branches': typeof BranchesRoute
+  '/verify': typeof VerifyRoute
+  '/app/home': typeof AppHomeRoute
+  '/app/library': typeof AppLibraryRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
+  '/app/teachers/$id': typeof AppTeachersIdRoute
+  '/app/subjects/': typeof AppSubjectsIndexRoute
+  '/app/teachers/': typeof AppTeachersIndexRoute
+  '/app/subjects/$id/$unitId/lessons': typeof AppSubjectsIdUnitIdLessonsRoute
+  '/app/subjects/$id/$unitId/quiz': typeof AppSubjectsIdUnitIdQuizRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/branches'
+    | '/verify'
+    | '/app/home'
+    | '/app/library'
+    | '/app/settings'
+    | '/app/subjects/$id'
+    | '/app/teachers/$id'
+    | '/app/subjects/'
+    | '/app/teachers/'
+    | '/app/subjects/$id/$unitId/lessons'
+    | '/app/subjects/$id/$unitId/quiz'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/branches'
+    | '/verify'
+    | '/app/home'
+    | '/app/library'
+    | '/app/settings'
+    | '/app/subjects/$id'
+    | '/app/teachers/$id'
+    | '/app/subjects'
+    | '/app/teachers'
+    | '/app/subjects/$id/$unitId/lessons'
+    | '/app/subjects/$id/$unitId/quiz'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/auth'
+    | '/branches'
+    | '/verify'
+    | '/app/home'
+    | '/app/library'
+    | '/app/settings'
+    | '/app/subjects/$id'
+    | '/app/teachers/$id'
+    | '/app/subjects/'
+    | '/app/teachers/'
+    | '/app/subjects/$id/$unitId/lessons'
+    | '/app/subjects/$id/$unitId/quiz'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BranchesRoute: typeof BranchesRoute
+  VerifyRoute: typeof VerifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branches': {
+      id: '/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof BranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +241,114 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/library': {
+      id: '/app/library'
+      path: '/library'
+      fullPath: '/app/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/home': {
+      id: '/app/home'
+      path: '/home'
+      fullPath: '/app/home'
+      preLoaderRoute: typeof AppHomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teachers/': {
+      id: '/app/teachers/'
+      path: '/teachers'
+      fullPath: '/app/teachers/'
+      preLoaderRoute: typeof AppTeachersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/subjects/': {
+      id: '/app/subjects/'
+      path: '/subjects'
+      fullPath: '/app/subjects/'
+      preLoaderRoute: typeof AppSubjectsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teachers/$id': {
+      id: '/app/teachers/$id'
+      path: '/teachers/$id'
+      fullPath: '/app/teachers/$id'
+      preLoaderRoute: typeof AppTeachersIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/subjects/$id': {
+      id: '/app/subjects/$id'
+      path: '/subjects/$id'
+      fullPath: '/app/subjects/$id'
+      preLoaderRoute: typeof AppSubjectsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/subjects/$id/$unitId/quiz': {
+      id: '/app/subjects/$id/$unitId/quiz'
+      path: '/$unitId/quiz'
+      fullPath: '/app/subjects/$id/$unitId/quiz'
+      preLoaderRoute: typeof AppSubjectsIdUnitIdQuizRouteImport
+      parentRoute: typeof AppSubjectsIdRoute
+    }
+    '/app/subjects/$id/$unitId/lessons': {
+      id: '/app/subjects/$id/$unitId/lessons'
+      path: '/$unitId/lessons'
+      fullPath: '/app/subjects/$id/$unitId/lessons'
+      preLoaderRoute: typeof AppSubjectsIdUnitIdLessonsRouteImport
+      parentRoute: typeof AppSubjectsIdRoute
+    }
   }
 }
 
+interface AppSubjectsIdRouteChildren {
+  AppSubjectsIdUnitIdLessonsRoute: typeof AppSubjectsIdUnitIdLessonsRoute
+  AppSubjectsIdUnitIdQuizRoute: typeof AppSubjectsIdUnitIdQuizRoute
+}
+
+const AppSubjectsIdRouteChildren: AppSubjectsIdRouteChildren = {
+  AppSubjectsIdUnitIdLessonsRoute: AppSubjectsIdUnitIdLessonsRoute,
+  AppSubjectsIdUnitIdQuizRoute: AppSubjectsIdUnitIdQuizRoute,
+}
+
+const AppSubjectsIdRouteWithChildren = AppSubjectsIdRoute._addFileChildren(
+  AppSubjectsIdRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppHomeRoute: typeof AppHomeRoute
+  AppLibraryRoute: typeof AppLibraryRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppSubjectsIdRoute: typeof AppSubjectsIdRouteWithChildren
+  AppTeachersIdRoute: typeof AppTeachersIdRoute
+  AppSubjectsIndexRoute: typeof AppSubjectsIndexRoute
+  AppTeachersIndexRoute: typeof AppTeachersIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppHomeRoute: AppHomeRoute,
+  AppLibraryRoute: AppLibraryRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppSubjectsIdRoute: AppSubjectsIdRouteWithChildren,
+  AppTeachersIdRoute: AppTeachersIdRoute,
+  AppSubjectsIndexRoute: AppSubjectsIndexRoute,
+  AppTeachersIndexRoute: AppTeachersIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BranchesRoute: BranchesRoute,
+  VerifyRoute: VerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
