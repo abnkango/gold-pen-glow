@@ -44,7 +44,7 @@ function AdminLayout() {
             return (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as "/admin"}
                 className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-display transition no-tap ${
                   active
                     ? "bg-gold-soft text-gold shadow-gold border border-[rgba(232,201,122,0.35)]"
