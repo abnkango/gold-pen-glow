@@ -13,10 +13,16 @@ import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHomeRouteImport } from './routes/app.home'
+import { Route as AdminTeachersRouteImport } from './routes/admin.teachers'
+import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminBooksRouteImport } from './routes/admin.books'
 import { Route as AppTeachersIndexRouteImport } from './routes/app.teachers.index'
 import { Route as AppSubjectsIndexRouteImport } from './routes/app.subjects.index'
 import { Route as AppTeachersIdRouteImport } from './routes/app.teachers.$id'
@@ -44,10 +50,20 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
@@ -63,6 +79,26 @@ const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
   getParentRoute: () => AppRoute,
+} as any)
+const AdminTeachersRoute = AdminTeachersRouteImport.update({
+  id: '/teachers',
+  path: '/teachers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStudentsRoute = AdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBooksRoute = AdminBooksRouteImport.update({
+  id: '/books',
+  path: '/books',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AppTeachersIndexRoute = AppTeachersIndexRouteImport.update({
   id: '/teachers/',
@@ -98,13 +134,19 @@ const AppSubjectsIdUnitIdLessonsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/branches': typeof BranchesRoute
   '/verify': typeof VerifyRoute
+  '/admin/books': typeof AdminBooksRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/students': typeof AdminStudentsRoute
+  '/admin/teachers': typeof AdminTeachersRoute
   '/app/home': typeof AppHomeRoute
   '/app/library': typeof AppLibraryRoute
   '/app/settings': typeof AppSettingsRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
   '/app/teachers/$id': typeof AppTeachersIdRoute
   '/app/subjects/': typeof AppSubjectsIndexRoute
@@ -118,9 +160,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/branches': typeof BranchesRoute
   '/verify': typeof VerifyRoute
+  '/admin/books': typeof AdminBooksRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/students': typeof AdminStudentsRoute
+  '/admin/teachers': typeof AdminTeachersRoute
   '/app/home': typeof AppHomeRoute
   '/app/library': typeof AppLibraryRoute
   '/app/settings': typeof AppSettingsRoute
+  '/admin': typeof AdminIndexRoute
   '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
   '/app/teachers/$id': typeof AppTeachersIdRoute
   '/app/subjects': typeof AppSubjectsIndexRoute
@@ -131,13 +178,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/branches': typeof BranchesRoute
   '/verify': typeof VerifyRoute
+  '/admin/books': typeof AdminBooksRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/students': typeof AdminStudentsRoute
+  '/admin/teachers': typeof AdminTeachersRoute
   '/app/home': typeof AppHomeRoute
   '/app/library': typeof AppLibraryRoute
   '/app/settings': typeof AppSettingsRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/subjects/$id': typeof AppSubjectsIdRouteWithChildren
   '/app/teachers/$id': typeof AppTeachersIdRoute
   '/app/subjects/': typeof AppSubjectsIndexRoute
@@ -149,13 +202,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/app'
     | '/auth'
     | '/branches'
     | '/verify'
+    | '/admin/books'
+    | '/admin/content'
+    | '/admin/students'
+    | '/admin/teachers'
     | '/app/home'
     | '/app/library'
     | '/app/settings'
+    | '/admin/'
     | '/app/subjects/$id'
     | '/app/teachers/$id'
     | '/app/subjects/'
@@ -169,9 +228,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/branches'
     | '/verify'
+    | '/admin/books'
+    | '/admin/content'
+    | '/admin/students'
+    | '/admin/teachers'
     | '/app/home'
     | '/app/library'
     | '/app/settings'
+    | '/admin'
     | '/app/subjects/$id'
     | '/app/teachers/$id'
     | '/app/subjects'
@@ -181,13 +245,19 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/app'
     | '/auth'
     | '/branches'
     | '/verify'
+    | '/admin/books'
+    | '/admin/content'
+    | '/admin/students'
+    | '/admin/teachers'
     | '/app/home'
     | '/app/library'
     | '/app/settings'
+    | '/admin/'
     | '/app/subjects/$id'
     | '/app/teachers/$id'
     | '/app/subjects/'
@@ -198,6 +268,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   BranchesRoute: typeof BranchesRoute
@@ -234,12 +305,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/app/settings': {
       id: '/app/settings'
@@ -261,6 +346,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/home'
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/admin/teachers': {
+      id: '/admin/teachers'
+      path: '/teachers'
+      fullPath: '/admin/teachers'
+      preLoaderRoute: typeof AdminTeachersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/students': {
+      id: '/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminStudentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/books': {
+      id: '/admin/books'
+      path: '/books'
+      fullPath: '/admin/books'
+      preLoaderRoute: typeof AdminBooksRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/app/teachers/': {
       id: '/app/teachers/'
@@ -307,6 +420,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminBooksRoute: typeof AdminBooksRoute
+  AdminContentRoute: typeof AdminContentRoute
+  AdminStudentsRoute: typeof AdminStudentsRoute
+  AdminTeachersRoute: typeof AdminTeachersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBooksRoute: AdminBooksRoute,
+  AdminContentRoute: AdminContentRoute,
+  AdminStudentsRoute: AdminStudentsRoute,
+  AdminTeachersRoute: AdminTeachersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface AppSubjectsIdRouteChildren {
   AppSubjectsIdUnitIdLessonsRoute: typeof AppSubjectsIdUnitIdLessonsRoute
   AppSubjectsIdUnitIdQuizRoute: typeof AppSubjectsIdUnitIdQuizRoute
@@ -345,6 +476,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   BranchesRoute: BranchesRoute,

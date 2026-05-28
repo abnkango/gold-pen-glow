@@ -7,13 +7,13 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
+const NAV: { to: string; label: string; icon: string; exact?: boolean }[] = [
   { to: "/admin", label: "الرئيسية", icon: "🏠", exact: true },
   { to: "/admin/content", label: "المحتوى التعليمي", icon: "📚" },
   { to: "/admin/teachers", label: "الأساتذة", icon: "👨‍🏫" },
   { to: "/admin/books", label: "الكتب (PDF)", icon: "📕" },
   { to: "/admin/students", label: "الطلاب", icon: "🎓" },
-] as const;
+];
 
 function AdminLayout() {
   const { isAdmin, username } = useAppState();
