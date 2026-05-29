@@ -2,23 +2,21 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { GoldButton } from "@/components/GoldButton";
-import { SUBJECTS } from "./app.subjects.index";
 import { motion } from "framer-motion";
+import { useAppState } from "@/lib/app-state";
 
 export const Route = createFileRoute("/app/subjects/$id")({
   component: Units,
 });
 
-const UNITS = [
-  { id: "u1", title: "الوحدة الأولى — المقدمة" },
-  { id: "u2", title: "الوحدة الثانية — الأساسيات" },
-  { id: "u3", title: "الوحدة الثالثة — التطبيقات" },
-  { id: "u4", title: "الوحدة الرابعة — التعمق" },
-];
-
 function Units() {
   const { id } = useParams({ from: "/app/subjects/$id" });
-  const subject = SUBJECTS.find((s) => s.id === id);
+  const { content } = useAppState();
+  const subject = content.subjects.find((s) => s.id === id);
+  const UNITS = content.units
+    .filter((u) => u.subjectId === id)
+    .sort((a, b) => a.order - b.order)
+    .map((u) => ({ id: u.id, title: u.name }));
   return (
     <ScreenTransition>
       <div className="px-5 pt-10 max-w-md mx-auto">
