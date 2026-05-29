@@ -1,8 +1,25 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type Branch = "scientific" | "literary" | "ninth";
 
 export const ADMIN_PHONE = "952191009"; // 00963952191009 بدون مفتاح الدولة
+
+/**
+ * يطبّع رقم الهاتف: يحذف المسافات و + والأصفار البادئة ومفتاح سوريا 963.
+ * يقبل: "00963952191009" / "+963 952 191 009" / "0952191009" / "952191009"
+ */
+export function normalizePhone(raw: string): string {
+  let p = (raw || "").replace(/[\s\-()]/g, "");
+  p = p.replace(/^\+/, "");
+  if (p.startsWith("00")) p = p.slice(2);
+  if (p.startsWith("963")) p = p.slice(3);
+  p = p.replace(/^0+/, "");
+  return p;
+}
+
+export function isAdminPhone(raw: string): boolean {
+  return normalizePhone(raw) === ADMIN_PHONE;
+}
 
 export interface Subject {
   id: string;
@@ -23,7 +40,7 @@ export interface Lesson {
   unitId: string;
   name: string;
   order: number;
-  videoUid?: string; // Cloudflare Stream UID
+  videoUid?: string;
   pdfs: { id: string; name: string; key: string }[];
   quiz?: { id: string; question: string; choices: string[]; answer: number }[];
   visible: boolean;
@@ -42,7 +59,7 @@ export interface Book {
   branch: Branch;
   subjectId?: string;
   name: string;
-  key: string; // R2 key (placeholder)
+  key: string;
 }
 export interface Student {
   id: string;
@@ -69,8 +86,8 @@ interface AppState {
   setUsername: (v: string) => void;
   setPhone: (v: string) => void;
   setBranch: (b: Branch | null) => void;
+  logout: () => void;
   content: ContentStore;
-  // CRUD
   addSubject: (s: Omit<Subject, "id">) => void;
   updateSubject: (id: string, patch: Partial<Subject>) => void;
   deleteSubject: (id: string) => void;
@@ -89,13 +106,19 @@ interface AppState {
 
 const Ctx = createContext<AppState | null>(null);
 const STORAGE_KEY = "waraqa_content_v1";
+const USER_KEY = "waraqa_user_v1";
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 const seed: ContentStore = {
   subjects: [
     { id: "s_math", branch: "scientific", name: "الرياضيات", icon: "📐", order: 1, visible: true },
     { id: "s_phys", branch: "scientific", name: "الفيزياء", icon: "⚛️", order: 2, visible: true },
+    { id: "s_chem", branch: "scientific", name: "الكيمياء", icon: "🧪", order: 3, visible: true },
     { id: "s_ar", branch: "literary", name: "اللغة العربية", icon: "📖", order: 1, visible: true },
+    { id: "s_hist", branch: "literary", name: "التاريخ", icon: "📜", order: 2, visible: true },
+    { id: "s_geo", branch: "literary", name: "الجغرافيا", icon: "🌍", order: 3, visible: true },
+    { id: "s_9math", branch: "ninth", name: "الرياضيات", icon: "📐", order: 1, visible: true },
+    { id: "s_9sci", branch: "ninth", name: "العلوم", icon: "🔬", order: 2, visible: true },
   ],
   units: [
     { id: "u_1", subjectId: "s_math", name: "الفصل الأول", order: 1 },
@@ -114,9 +137,24 @@ function loadContent(): ContentStore {
   if (typeof window === "undefined") return seed;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return { ...seed, ...JSON.parse(raw) };
   } catch {}
   return seed;
+}
+
+interface PersistedUser {
+  username: string;
+  phone: string;
+  branch: Branch | null;
+}
+
+function loadUser(): PersistedUser {
+  if (typeof window === "undefined") return { username: "الطالب", phone: "", branch: null };
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { username: "الطالب", phone: "", branch: null };
 }
 
 export function AppStateProvider({ children }: { children: ReactNode }) {
@@ -124,19 +162,38 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [phone, setPhone] = useState("");
   const [branch, setBranch] = useState<Branch | null>(null);
   const [content, setContent] = useState<ContentStore>(seed);
+  const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => { setContent(loadContent()); }, []);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(content)); } catch {}
-    }
-  }, [content]);
+    const u = loadUser();
+    setUsername(u.username);
+    setPhone(u.phone);
+    setBranch(u.branch);
+    setContent(loadContent());
+    setHydrated(true);
+  }, []);
 
-  const isAdmin = phone.replace(/\D/g, "") === ADMIN_PHONE;
+  useEffect(() => {
+    if (!hydrated || typeof window === "undefined") return;
+    try { localStorage.setItem(USER_KEY, JSON.stringify({ username, phone, branch })); } catch {}
+  }, [username, phone, branch, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || typeof window === "undefined") return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(content)); } catch {}
+  }, [content, hydrated]);
+
+  const isAdmin = useMemo(() => isAdminPhone(phone), [phone]);
 
   const value: AppState = {
     username, phone, branch, isAdmin,
     setUsername, setPhone, setBranch,
+    logout: () => {
+      setUsername("الطالب");
+      setPhone("");
+      setBranch(null);
+      if (typeof window !== "undefined") localStorage.removeItem(USER_KEY);
+    },
     content,
     addSubject: (s) => setContent((c) => ({ ...c, subjects: [...c.subjects, { ...s, id: uid() }] })),
     updateSubject: (id, patch) => setContent((c) => ({ ...c, subjects: c.subjects.map((x) => x.id === id ? { ...x, ...patch } : x) })),
