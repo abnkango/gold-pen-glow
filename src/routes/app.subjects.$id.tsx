@@ -21,6 +21,11 @@ function Units() {
     <ScreenTransition>
       <div className="px-5 pt-10 max-w-md mx-auto">
         <ScreenHeader title={subject?.name ?? "المادة"} subtitle="اختر وحدة" />
+        {UNITS.length === 0 ? (
+          <p className="text-center text-silver-dim text-sm mt-10">
+            لا توجد وحدات بعد لهذه المادة.
+          </p>
+        ) : (
         <div className="space-y-4">
           {UNITS.map((u, i) => (
             <motion.div
@@ -47,6 +52,7 @@ function Units() {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
     </ScreenTransition>
   );
