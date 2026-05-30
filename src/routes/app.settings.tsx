@@ -42,7 +42,16 @@ const SECTIONS: { title: string; rows: Row[] }[] = [
 
 function SettingsScreen() {
   const [modal, setModal] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
   const [opts, setOpts] = useState({ art: true, sport: false, music: true });
+  const { logout } = useAppState();
+  const navigate = useNavigate();
+
+  function confirmLogout() {
+    logout();
+    setLogoutModal(false);
+    navigate({ to: "/" });
+  }
 
   return (
     <ScreenTransition>
