@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { ScreenHeader } from "@/components/ScreenHeader";
-import { ChevronLeft, User, BookOpen, Smartphone, Bell, Lock, Languages } from "lucide-react";
+import { ChevronLeft, User, BookOpen, Smartphone, Bell, Lock, Languages, LogOut } from "lucide-react";
+import { useAppState } from "@/lib/app-state";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsScreen,
