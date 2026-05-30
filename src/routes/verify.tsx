@@ -45,7 +45,9 @@ function Verify() {
     // TODO: استبدل بـ Firebase verifyOTP لاحقاً.
     if (!complete) return;
     if (isAdmin) { nav({ to: "/admin" }); return; }
-    nav({ to: branch ? "/app/home" : "/branches" });
+    // تسجيل جديد: نمسح أي فرع قديم محفوظ ونوجه لاختيار الفرع
+    setBranch(null);
+    nav({ to: "/branches" });
   }
 
   return (
