@@ -39,11 +39,16 @@ function Splash() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.7 }}
-          className="w-full max-w-sm space-y-3"
+          className="w-full max-w-sm flex flex-col gap-5"
         >
           <Link to="/auth" search={{ mode: "register" } as never}>
             <GoldButton variant="primary">إنشاء حساب</GoldButton>
           </Link>
+          <div className="flex items-center gap-3 px-2 opacity-60">
+            <span className="h-px flex-1 bg-[rgba(232,201,122,0.25)]" />
+            <span className="text-[11px] text-silver-dim font-display">أو</span>
+            <span className="h-px flex-1 bg-[rgba(232,201,122,0.25)]" />
+          </div>
           <Link to="/auth" search={{ mode: "login" } as never}>
             <GoldButton variant="outline">تسجيل الدخول</GoldButton>
           </Link>
