@@ -12,7 +12,7 @@ const LEN = 6;
 
 function Verify() {
   const nav = useNavigate();
-  const { phone, isAdmin, branch } = useAppState();
+  const { phone, isAdmin, setBranch } = useAppState();
   const [digits, setDigits] = useState<string[]>(Array(LEN).fill(""));
   const refs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -45,7 +45,9 @@ function Verify() {
     // TODO: استبدل بـ Firebase verifyOTP لاحقاً.
     if (!complete) return;
     if (isAdmin) { nav({ to: "/admin" }); return; }
-    nav({ to: branch ? "/app/home" : "/branches" });
+    // تسجيل جديد: نمسح أي فرع قديم محفوظ ونوجه لاختيار الفرع
+    setBranch(null);
+    nav({ to: "/branches" });
   }
 
   return (
