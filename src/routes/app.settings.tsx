@@ -86,8 +86,62 @@ function SettingsScreen() {
               </div>
             </div>
           ))}
+
+          <motion.button
+            whileTap={{ scale: 0.99 }}
+            onClick={() => setLogoutModal(true)}
+            className="w-full flex items-center gap-3 p-4 rounded-3xl glass metallic-border text-right"
+          >
+            <div className="w-9 h-9 rounded-xl bg-[rgba(232,201,122,0.1)] flex items-center justify-center">
+              <LogOut className="w-4 h-4 text-gold" />
+            </div>
+            <div className="flex-1">
+              <p className="font-display text-gold text-sm">تسجيل الخروج</p>
+              <p className="text-silver-dim text-xs">العودة إلى شاشة البداية</p>
+            </div>
+            <ChevronLeft className="w-4 h-4 text-silver-dim" />
+          </motion.button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {logoutModal && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setLogoutModal(false)}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 20, opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-xs glass-strong metallic-border rounded-3xl p-6 text-center"
+            >
+              <div className="mx-auto w-12 h-12 rounded-2xl bg-[rgba(232,201,122,0.1)] flex items-center justify-center mb-3">
+                <LogOut className="w-5 h-5 text-gold" />
+              </div>
+              <p className="font-display text-gold text-lg">هل أنت متأكد؟</p>
+              <p className="text-silver-dim text-xs mt-1.5">سيتم تسجيل خروجك والعودة إلى شاشة البداية</p>
+              <div className="mt-5 flex flex-col gap-2.5">
+                <button
+                  onClick={confirmLogout}
+                  className="w-full rounded-2xl bg-gold py-2.5 font-display text-primary-foreground shadow-gold"
+                >
+                  نعم، تسجيل الخروج
+                </button>
+                <button
+                  onClick={() => setLogoutModal(false)}
+                  className="w-full rounded-2xl border border-[rgba(232,201,122,0.25)] py-2.5 font-display text-silver hover:bg-white/5 transition"
+                >
+                  إلغاء
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {modal && (
