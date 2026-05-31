@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { BottomNav } from "@/components/BottomNav";
 
 export const Route = createFileRoute("/app")({
@@ -6,9 +6,12 @@ export const Route = createFileRoute("/app")({
 });
 
 function AppLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <div className="min-h-screen pb-28">
-      <Outlet />
+      <div key={pathname}>
+        <Outlet />
+      </div>
       <BottomNav />
     </div>
   );
