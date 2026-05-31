@@ -64,7 +64,6 @@ interface AppState {
   username: string;
   phone: string;
   branch: Branch | null;
-  isAdmin: boolean;
   setUsername: (v: string) => void;
   setPhone: (v: string) => void;
   setBranch: (b: Branch | null) => void;
