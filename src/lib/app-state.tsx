@@ -164,10 +164,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(content)); } catch {}
   }, [content, hydrated]);
 
-  const isAdmin = useMemo(() => isAdminPhone(phone), [phone]);
-
   const value: AppState = {
-    username, phone, branch, isAdmin,
+    username, phone, branch,
     setUsername, setPhone, setBranch,
     logout: () => {
       setUsername("الطالب");
