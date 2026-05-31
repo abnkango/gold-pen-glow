@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import { GoldButton } from "@/components/GoldButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { FieldError } from "@/components/auth/FieldError";
-import { isAdminPhone, useAppState } from "@/lib/app-state";
+import { useAppState } from "@/lib/app-state";
 
 type Mode = "register" | "login";
 
