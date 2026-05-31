@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import { GoldButton } from "@/components/GoldButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { FieldError } from "@/components/auth/FieldError";
-import { isAdminPhone, useAppState } from "@/lib/app-state";
+import { useAppState } from "@/lib/app-state";
 
 type Mode = "register" | "login";
 
@@ -38,12 +38,6 @@ function Auth() {
 
     if (!isLogin && name) setUsername(name.trim());
     setPhone(phoneLocal);
-
-    // الآدمن: يتجاوز الفرع. عند تسجيل الدخول يدخل مباشرة. عند التسجيل أيضًا.
-    if (isAdminPhone(phoneLocal)) {
-      navigate({ to: "/admin" });
-      return;
-    }
 
     if (isLogin) {
       // مستخدم عائد: إن سبق وحدد فرعه يدخل مباشرة، وإلا يختار الفرع

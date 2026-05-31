@@ -2,24 +2,6 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 
 export type Branch = "scientific" | "literary" | "ninth";
 
-export const ADMIN_PHONE = "952191009"; // 00963952191009 بدون مفتاح الدولة
-
-/**
- * يطبّع رقم الهاتف: يحذف المسافات و + والأصفار البادئة ومفتاح سوريا 963.
- * يقبل: "00963952191009" / "+963 952 191 009" / "0952191009" / "952191009"
- */
-export function normalizePhone(raw: string): string {
-  let p = (raw || "").replace(/[\s\-()]/g, "");
-  p = p.replace(/^\+/, "");
-  if (p.startsWith("00")) p = p.slice(2);
-  if (p.startsWith("963")) p = p.slice(3);
-  p = p.replace(/^0+/, "");
-  return p;
-}
-
-export function isAdminPhone(raw: string): boolean {
-  return normalizePhone(raw) === ADMIN_PHONE;
-}
 
 export interface Subject {
   id: string;
@@ -82,7 +64,6 @@ interface AppState {
   username: string;
   phone: string;
   branch: Branch | null;
-  isAdmin: boolean;
   setUsername: (v: string) => void;
   setPhone: (v: string) => void;
   setBranch: (b: Branch | null) => void;
@@ -183,10 +164,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(content)); } catch {}
   }, [content, hydrated]);
 
-  const isAdmin = useMemo(() => isAdminPhone(phone), [phone]);
-
   const value: AppState = {
-    username, phone, branch, isAdmin,
+    username, phone, branch,
     setUsername, setPhone, setBranch,
     logout: () => {
       setUsername("الطالب");
