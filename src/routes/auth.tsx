@@ -39,12 +39,6 @@ function Auth() {
     if (!isLogin && name) setUsername(name.trim());
     setPhone(phoneLocal);
 
-    // الآدمن: يتجاوز الفرع. عند تسجيل الدخول يدخل مباشرة. عند التسجيل أيضًا.
-    if (isAdminPhone(phoneLocal)) {
-      navigate({ to: "/admin" });
-      return;
-    }
-
     if (isLogin) {
       // مستخدم عائد: إن سبق وحدد فرعه يدخل مباشرة، وإلا يختار الفرع
       navigate({ to: branch ? "/app/home" : "/branches" });
