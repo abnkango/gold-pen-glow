@@ -73,12 +73,10 @@ function Verify() {
 
         <div className="mt-12 w-full max-w-sm">
           <GoldButton onClick={confirm} disabled={!complete}>
-            {isAdmin ? "دخول لوحة التحكم" : "تأكيد"}
+            تأكيد
           </GoldButton>
         </div>
-        {isAdmin && (
-          <p className="mt-4 text-xs text-gold/80 font-display">تم التعرّف على حساب الآدمن</p>
-        )}
+
 
         <button className="mt-6 text-silver-dim text-sm hover:text-gold transition">
           إعادة إرسال الرمز
