@@ -126,6 +126,19 @@
   .glow-orange { box-shadow: var(--glow-orange); }
   .shadow-orange { box-shadow: var(--shadow-orange); }
   .shadow-orange-strong { box-shadow: var(--shadow-orange-strong); }
+
+  /* aliases for legacy gold/silver classes */
+  .text-gold {
+    background: var(--gradient-orange);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gold { background: var(--gradient-orange); }
+  .shadow-gold { box-shadow: var(--shadow-orange); }
+  .shadow-gold-strong { box-shadow: var(--shadow-orange-strong); }
+  .text-silver { color: var(--foreground); }
+  .text-silver-dim { color: var(--muted-foreground); }
   .glass {
     background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.35));
     backdrop-filter: blur(18px);
