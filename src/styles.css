@@ -32,6 +32,10 @@
   --color-ring: var(--ring);
   --color-orange: var(--orange);
   --color-orange-soft: var(--orange-soft);
+  --color-gold: var(--orange);
+  --color-gold-soft: var(--orange-soft);
+  --color-silver: var(--foreground);
+  --color-silver-dim: var(--muted-foreground);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
