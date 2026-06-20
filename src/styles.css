@@ -153,4 +153,41 @@
     border: 1px solid rgba(232,97,10,0.25);
   }
   .no-tap { -webkit-tap-highlight-color: transparent; }
+
+  /* Ripple effect for buttons */
+  .lov-ripple {
+    position: absolute;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.45);
+    transform: scale(0);
+    opacity: 0.7;
+    pointer-events: none;
+    animation: lov-ripple 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    mix-blend-mode: overlay;
+  }
+  @keyframes lov-ripple {
+    to { transform: scale(1); opacity: 0; }
+  }
+
+  /* Shine sweep on hover */
+  .lov-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .lov-btn:hover::before { transform: translateX(120%); }
+
+  @keyframes lov-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .animate-float { animation: lov-float 3.5s ease-in-out infinite; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lov-btn::before, .lov-ripple, .animate-float { animation: none !important; transition: none !important; }
 }
