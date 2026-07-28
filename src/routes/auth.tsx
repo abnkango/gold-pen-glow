@@ -1,9 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { motion } from "framer-motion";
+import { Lock, Phone, User } from "lucide-react";
 import { useState } from "react";
-import { Logo } from "@/components/Logo";
+import { Aurora } from "@/components/Aurora";
 import { GoldButton } from "@/components/GoldButton";
+import { Logo } from "@/components/Logo";
 import { ScreenTransition } from "@/components/ScreenTransition";
-import { FieldError } from "@/components/auth/FieldError";
+import { TextField } from "@/components/TextField";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAppState } from "@/lib/app-state";
 
 type Mode = "register" | "login";
@@ -14,6 +18,11 @@ export const Route = createFileRoute("/auth")({
   }),
   component: Auth,
 });
+
+const MODES: { id: Mode; label: string }[] = [
+  { id: "register", label: "إنشاء حساب" },
+  { id: "login", label: "تسجيل الدخول" },
+];
 
 function Auth() {
   const navigate = useNavigate();
@@ -50,95 +59,104 @@ function Auth() {
 
   return (
     <ScreenTransition>
-      <div className="min-h-screen flex flex-col items-center px-6 py-10">
-        <div className="flex flex-col items-center">
-          <Logo size={64} />
-          <h2 className="mt-3 font-display text-2xl text-gold">ورقة وقلم</h2>
+      <div className="relative flex min-h-svh flex-col items-center overflow-hidden px-6 pt-6 pb-12">
+        <Aurora />
+
+        <div className="relative z-10 flex w-full max-w-sm items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo size={40} glow={false} />
+            <span className="text-gradient-brand font-display text-lg">ورقة وقلم</span>
+          </Link>
+          <ThemeToggle />
         </div>
 
         <form
           onSubmit={submit}
-          className="mt-8 w-full max-w-sm glass-strong rounded-3xl p-6 space-y-5 metallic-border"
+          className="surface-strong hairline relative z-10 mt-8 w-full max-w-sm space-y-5 rounded-[32px] p-6"
         >
-          <div className="text-center">
-            <h1 className="font-display text-xl text-silver">
-              {isLogin ? "تسجيل الدخول" : "إنشاء حساب جديد"}
-            </h1>
-            <p className="text-[11px] text-silver-dim mt-1">
-              {isLogin ? "أدخل رقمك وكلمة المرور" : "نحتاج بعض المعلومات للبدء"}
-            </p>
+          <div className="bg-muted/70 relative flex rounded-2xl p-1">
+            {MODES.map((m) => (
+              <Link
+                key={m.id}
+                to="/auth"
+                search={{ mode: m.id }}
+                replace
+                className="no-tap relative flex-1 py-2 text-center"
+              >
+                {mode === m.id && (
+                  <motion.span
+                    layoutId="authTab"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                    className="bg-gradient-brand shadow-brand absolute inset-0 rounded-xl"
+                  />
+                )}
+                <span
+                  className={`relative font-display text-sm ${
+                    mode === m.id ? "text-primary-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {m.label}
+                </span>
+              </Link>
+            ))}
           </div>
+
+          <p className="text-center text-xs text-muted-foreground">
+            {isLogin ? "أدخل رقمك وكلمة المرور للمتابعة" : "نحتاج بعض المعلومات للبدء"}
+          </p>
 
           {!isLogin && (
-            <div>
-              <Field label="الاسم" value={name} onChange={setName} placeholder="اكتب اسمك" hasError={!!errors.name} />
-              <FieldError message={errors.name} />
-            </div>
+            <TextField
+              label="الاسم"
+              value={name}
+              onValueChange={setName}
+              placeholder="اكتب اسمك"
+              icon={User}
+              error={errors.name}
+              autoComplete="name"
+            />
           )}
 
-          <div>
-            <label className="block text-xs text-silver-dim mb-1.5">رقم الهاتف</label>
-            <div
-              className={`flex items-stretch gap-2 rounded-2xl bg-black/40 border transition focus-within:shadow-gold ${
-                errors.phone
-                  ? "border-[rgba(232,201,122,0.7)]"
-                  : "border-[rgba(232,201,122,0.25)] focus-within:border-[rgba(232,201,122,0.7)]"
-              }`}
-            >
-              <span className="px-3 flex items-center font-display text-gold border-l border-[rgba(232,201,122,0.25)]">+963</span>
-              <input
-                value={phoneLocal}
-                onChange={(e) => setPhoneLocal(e.target.value)}
-                inputMode="numeric"
-                placeholder="9XX XXX XXX"
-                className="flex-1 bg-transparent py-3 pr-3 outline-none text-silver placeholder:text-silver-dim/60 text-right"
-                dir="ltr"
-              />
-            </div>
-            <FieldError message={errors.phone} />
-          </div>
+          <TextField
+            label="رقم الهاتف"
+            value={phoneLocal}
+            onValueChange={setPhoneLocal}
+            placeholder="9XX XXX XXX"
+            prefix="+963"
+            icon={Phone}
+            error={errors.phone}
+            inputMode="numeric"
+            autoComplete="tel"
+            dir="ltr"
+            className="pl-3 text-left"
+          />
 
-          <div>
-            <Field label="كلمة المرور" value={pwd} onChange={setPwd} placeholder="••••••••" type="password" hasError={!!errors.pwd} />
-            <FieldError message={errors.pwd} />
-          </div>
+          <TextField
+            label="كلمة المرور"
+            value={pwd}
+            onValueChange={setPwd}
+            placeholder="••••••••"
+            type="password"
+            icon={Lock}
+            error={errors.pwd}
+            autoComplete={isLogin ? "current-password" : "new-password"}
+          />
 
           <GoldButton type="submit">{isLogin ? "دخول" : "متابعة"}</GoldButton>
 
-          <div className="text-center pt-1">
+          <p className="pt-1 text-center text-[12px] text-muted-foreground">
             {isLogin ? (
-              <Link to="/auth" search={{ mode: "register" }} className="text-[12px] text-silver-dim hover:text-gold transition">
-                ليس لديك حساب؟ <span className="text-gold font-display">إنشاء حساب</span>
+              <Link to="/auth" search={{ mode: "register" }} replace className="transition-colors">
+                ليس لديك حساب؟ <span className="text-brand font-display">إنشاء حساب</span>
               </Link>
             ) : (
-              <Link to="/auth" search={{ mode: "login" }} className="text-[12px] text-silver-dim hover:text-gold transition">
-                لديك حساب؟ <span className="text-gold font-display">تسجيل الدخول</span>
+              <Link to="/auth" search={{ mode: "login" }} replace className="transition-colors">
+                لديك حساب؟ <span className="text-brand font-display">تسجيل الدخول</span>
               </Link>
             )}
-          </div>
+          </p>
         </form>
       </div>
     </ScreenTransition>
-  );
-}
-
-function Field({
-  label, value, onChange, placeholder, type = "text", hasError,
-}: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string; hasError?: boolean }) {
-  return (
-    <div>
-      <label className="block text-xs text-silver-dim mb-1.5">{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={`w-full rounded-2xl bg-black/40 border px-4 py-3 outline-none text-silver placeholder:text-silver-dim/60 focus:shadow-gold transition ${
-          hasError
-            ? "border-[rgba(232,201,122,0.7)]"
-            : "border-[rgba(232,201,122,0.25)] focus:border-[rgba(232,201,122,0.7)]"
-        }`}
-      />
-    </div>
   );
 }

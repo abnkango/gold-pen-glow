@@ -1,8 +1,9 @@
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { ScreenTransition } from "@/components/ScreenTransition";
-import { ScreenHeader } from "@/components/ScreenHeader";
-import { GoldButton } from "@/components/GoldButton";
+import { createFileRoute, Link, Outlet, useChildMatches, useParams } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { ArrowRight, HelpCircle, Layers, PlayCircle } from "lucide-react";
+import { GoldButton } from "@/components/GoldButton";
+import { ScreenHeader } from "@/components/ScreenHeader";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { useAppState } from "@/lib/app-state";
 
 export const Route = createFileRoute("/app/subjects/$id")({
@@ -12,46 +13,83 @@ export const Route = createFileRoute("/app/subjects/$id")({
 function Units() {
   const { id } = useParams({ from: "/app/subjects/$id" });
   const { content } = useAppState();
+  // شاشات الدروس والاختبار مسارات فرعية لهذا المسار
+  const hasChildRoute = useChildMatches().length > 0;
   const subject = content.subjects.find((s) => s.id === id);
-  const UNITS = content.units
+  const units = content.units
     .filter((u) => u.subjectId === id)
     .sort((a, b) => a.order - b.order)
-    .map((u) => ({ id: u.id, title: u.name }));
+    .map((u) => ({
+      id: u.id,
+      title: u.name,
+      lessons: content.lessons.filter((l) => l.unitId === u.id && l.visible).length,
+    }));
+
+  if (hasChildRoute) return <Outlet />;
+
   return (
     <ScreenTransition>
-      <div className="px-5 pt-10 max-w-md mx-auto">
-        <ScreenHeader title={subject?.name ?? "المادة"} subtitle="اختر وحدة" />
-        {UNITS.length === 0 ? (
-          <p className="text-center text-silver-dim text-sm mt-10">
-            لا توجد وحدات بعد لهذه المادة.
-          </p>
-        ) : (
-        <div className="space-y-4">
-          {UNITS.map((u, i) => (
-            <motion.div
-              key={u.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className="glass metallic-border rounded-3xl p-5"
+      <div className="mx-auto max-w-md px-5 pt-6">
+        <ScreenHeader
+          align="start"
+          title={subject?.name ?? "المادة"}
+          subtitle="اختر وحدة للبدء"
+          action={
+            <Link
+              to="/app/subjects"
+              aria-label="رجوع إلى المواد"
+              className="surface hairline grid h-10 w-10 place-items-center rounded-2xl"
             >
-              <p className="font-display text-gold text-center text-lg">{u.title}</p>
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <Link to="/app/subjects/$id/$unitId/lessons" params={{ id, unitId: u.id }}>
-                  <GoldButton variant="outline" className="text-sm py-2.5">مشاهدة الدروس</GoldButton>
-                </Link>
-                <Link to="/app/subjects/$id/$unitId/quiz" params={{ id, unitId: u.id }}>
-                  <motion.button
-                    whileTap={{ scale: 0.96 }} whileHover={{ scale: 1.02 }}
-                    className="no-tap w-full rounded-2xl py-2.5 font-display text-sm border border-emerald-500/50 text-emerald-300 bg-emerald-500/5 hover:bg-emerald-500/10 transition"
-                  >
-                    اختبار الوحدة
-                  </motion.button>
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              <ArrowRight className="text-brand h-4 w-4" />
+            </Link>
+          }
+        />
+
+        {units.length === 0 ? (
+          <div className="surface hairline mt-4 flex flex-col items-center rounded-[26px] p-10 text-center">
+            <Layers className="mb-3 h-12 w-12 text-muted-foreground" strokeWidth={1.2} />
+            <p className="font-display text-foreground">لا توجد وحدات بعد</p>
+            <p className="mt-1 text-xs text-muted-foreground">سيتم إضافتها قريبًا لهذه المادة.</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {units.map((u, i) => (
+              <motion.article
+                key={u.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className="surface hairline rounded-[26px] p-5"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="bg-gradient-brand shadow-brand grid h-10 w-10 shrink-0 place-items-center rounded-2xl font-display text-primary-foreground">
+                    {i + 1}
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-display text-lg text-foreground">{u.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {u.lessons > 0 ? `${u.lessons} درس` : "لا دروس بعد"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <Link to="/app/subjects/$id/$unitId/lessons" params={{ id, unitId: u.id }}>
+                    <GoldButton variant="outline" size="sm">
+                      <PlayCircle className="h-4 w-4" />
+                      الدروس
+                    </GoldButton>
+                  </Link>
+                  <Link to="/app/subjects/$id/$unitId/quiz" params={{ id, unitId: u.id }}>
+                    <GoldButton variant="success" size="sm">
+                      <HelpCircle className="h-4 w-4" />
+                      اختبار الوحدة
+                    </GoldButton>
+                  </Link>
+                </div>
+              </motion.article>
+            ))}
+          </div>
         )}
       </div>
     </ScreenTransition>
