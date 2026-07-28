@@ -1,12 +1,21 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { Aurora } from "@/components/Aurora";
 import { GoldButton } from "@/components/GoldButton";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { BRANCHES, useAppState } from "@/lib/app-state";
 
 export const Route = createFileRoute("/branches")({
   component: Branches,
 });
+
+const HINTS: Record<string, string> = {
+  scientific: "رياضيات، فيزياء، كيمياء وعلوم",
+  literary: "لغة عربية، تاريخ، جغرافيا وفلسفة",
+  ninth: "منهاج الصف التاسع كاملًا",
+};
 
 function Branches() {
   const nav = useNavigate();
@@ -15,49 +24,75 @@ function Branches() {
 
   return (
     <ScreenTransition>
-      <div className="min-h-screen px-6 pt-12 pb-40">
-        <h1 className="font-display text-3xl text-gold text-center">اختر فرعك</h1>
-        <p className="mt-2 text-center text-silver-dim text-sm">سنخصص المحتوى بناءً على اختيارك</p>
+      <div className="relative min-h-svh overflow-hidden px-6 pt-12 pb-44">
+        <Aurora />
 
-        <div className="mt-10 space-y-4 max-w-md mx-auto">
-          {BRANCHES.map((b) => {
-            const active = branch === b.id;
-            return (
-              <motion.button
-                key={b.id}
-                onClick={() => setBranch(b.id)}
-                whileTap={{ scale: 0.98 }}
-                whileHover={{ scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 380, damping: 26 }}
-                className={`no-tap w-full flex items-center justify-between rounded-3xl p-5 metallic-border transition-all ${
-                  active
-                    ? "bg-[linear-gradient(135deg,rgba(232,201,122,0.18),rgba(201,168,76,0.06))] shadow-gold-strong"
-                    : "glass"
-                }`}
-              >
-                <span className={`font-display text-xl ${active ? "text-gold" : "text-silver"}`}>
-                  {b.name}
-                </span>
-                <span className="text-3xl">{b.icon}</span>
-              </motion.button>
-            );
-          })}
+        <div className="relative z-10 mx-auto max-w-md">
+          <ScreenHeader title="اختر فرعك" subtitle="سنخصص المحتوى بناءً على اختيارك" />
+
+          <div className="mt-8 space-y-4">
+            {BRANCHES.map((b, i) => {
+              const active = branch === b.id;
+              return (
+                <motion.button
+                  key={b.id}
+                  onClick={() => setBranch(b.id)}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileTap={{ scale: 0.985 }}
+                  whileHover={{ y: -3 }}
+                  transition={{ delay: i * 0.06, type: "spring", stiffness: 380, damping: 26 }}
+                  aria-pressed={active}
+                  className={`no-tap hairline relative flex w-full items-center gap-4 rounded-[28px] p-5 text-right transition-shadow duration-300 ${
+                    active ? "bg-gradient-brand-soft shadow-brand" : "surface hover:shadow-elevated"
+                  }`}
+                >
+                  <span
+                    className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-3xl transition-colors ${
+                      active ? "bg-gradient-brand" : "bg-muted"
+                    }`}
+                  >
+                    {b.icon}
+                  </span>
+                  <span className="flex-1">
+                    <span
+                      className={`block font-display text-xl ${active ? "text-brand" : "text-foreground"}`}
+                    >
+                      {b.name}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      {HINTS[b.id]}
+                    </span>
+                  </span>
+                  <span
+                    className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all ${
+                      active
+                        ? "bg-gradient-brand border-transparent"
+                        : "border-border bg-transparent"
+                    }`}
+                  >
+                    {active && <Check className="h-4 w-4 text-primary-foreground" />}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       <AnimatePresence>
         {selected && (
           <motion.div
-            initial={{ y: 100, opacity: 0 }}
+            initial={{ y: 120, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
+            exit={{ y: 120, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 30 }}
-            className="fixed bottom-0 inset-x-0 px-4 pb-[max(env(safe-area-inset-bottom),16px)] pt-4"
+            className="fixed inset-x-0 bottom-0 z-40 px-4 pt-4 pb-[max(env(safe-area-inset-bottom),16px)]"
           >
-            <div className="mx-auto max-w-md glass-strong rounded-3xl p-4 shadow-gold-strong">
-              <p className="text-silver-dim text-xs text-center mb-1">الفرع المختار</p>
-              <p className="font-display text-gold text-lg text-center mb-3">{selected.name}</p>
-              <GoldButton onClick={() => nav({ to: "/app/home" })}>تأكيد</GoldButton>
+            <div className="surface-strong hairline mx-auto max-w-md rounded-[28px] p-4">
+              <p className="mb-1 text-center text-xs text-muted-foreground">الفرع المختار</p>
+              <p className="text-brand mb-3 text-center font-display text-lg">{selected.name}</p>
+              <GoldButton onClick={() => nav({ to: "/app/home" })}>تأكيد ومتابعة</GoldButton>
             </div>
           </motion.div>
         )}
